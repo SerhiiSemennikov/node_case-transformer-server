@@ -1,12 +1,9 @@
 /* eslint-disable no-console */
 /* eslint-disable max-len */
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
+
 const http = require('http');
-const url = require('url');
+// const url = require('url');
 const { convertToCase } = require('./convertToCase');
-// const { error } = require('console');
 
 const ERROR_MESSAGES = {
   NO_TEXT:
@@ -21,9 +18,9 @@ const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   const server = http.createServer((request, response) => {
-    const normUrl = new url.URL(request.url, `http://${request.headers.host}`);
-    const textToConvert = normUrl.pathname.replace('/', '');
-    const caseType = normUrl.searchParams.get('toCase');
+    const url = new URL(request.url, `http://${request.headers.host}`);
+    const textToConvert = url.pathname.slice(1);
+    const caseType = url.searchParams.get('toCase');
 
     response.setHeader('Content-Type', 'application/json');
 
@@ -89,24 +86,24 @@ function handleSuccess(
     convertedText,
   };
 
-  response.end(
+  console.log(
     JSON.stringify(result),
-    console.log(result, response.statusCode, response.statusMessage),
+    response.statusCode,
+    response.statusMessage,
   );
+  response.end(JSON.stringify(result));
 }
 
 function handleError(response, errors) {
   response.statusCode = 400;
   response.statusMessage = 'Bad request';
 
-  response.end(
+  console.log(
     JSON.stringify({ errors }),
-    console.log(
-      JSON.stringify({ errors }),
-      response.statusCode,
-      response.statusMessage,
-    ),
+    response.statusCode,
+    response.statusMessage,
   );
+  response.end(JSON.stringify({ errors }));
 }
 
 function handleInternalError(response) {

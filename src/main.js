@@ -1,6 +1,6 @@
 const { createServer } = require('./createServer');
 
-createServer().listen(5701, () => {
+createServer().listen(5700, () => {
   // eslint-disable-next-line no-console
   console.log('Server started! 🚀');
 });
